@@ -26,6 +26,7 @@ import cog from'./assets/cog.svg';
 import chat from'./assets/chat.svg';
 import fullscreen from'./assets/fullscreen.svg';
 import logout from'./assets/logout.svg';
+import { basename } from 'path';
 
 
 function App() {
@@ -57,32 +58,32 @@ function App() {
   <>
     <div className="flex  justify-between fixed bg-white w-full h-[120px] top-0 left-0">
   {/* sidebar */}
-      <div className='border w-24 bg-[#130F40] h-full fixed top-0 left-0 '>
+      <div className='w-24 bg-[#130F40] h-full fixed top-0 left-0 '>
  
-        <div className='flex flex-row  h-6 mt-8 left-2 relative'>
+        <div className='h-6 mt-10 left-2 relative'>
           <img src={bulatAbu} className='relative left-8'></img>
           <img src={bulatHijau} className='absolute h-6 bottom-2 left-5'></img>
         </div>
 
-        <div className='border mt-8 w-1/2 ml-6 border-[#fffff]'></div>
+        <div className='border mt-8 w-2/5 ml-[29px] border-[#fffff] opacity-[.29] '></div>
 
-        <div className='flex flex-col mt-6 place-items-center'>
-          <img src={keranjang} className='w-[20px]'></img>
-          <img src={schedule} className='w-[18px] mt-6'></img>
-          <img src={box} className='w-[18px] mt-6'></img>
-          <img src={cart} className='w-[20px] mt-6'></img>
+        <div className='flex flex-col mt-8 place-items-center'>
+          <img src={keranjang} className='w-[22px]'></img>
+          <img src={schedule} className='w-[18px] mt-8'></img>
+          <img src={box} className='w-[20px] mt-8'></img>
+          <img src={cart} className='w-[20px] mt-8'></img>
         </div>
 
-        <div className='border mt-8 w-1/2 ml-6 border-[#fffff]'></div>
+        <div className='border mt-6 w-2/5 ml-[29px] border-[#fffff] opacity-[.29]'></div>
 
-        <div className='flex flex-col mt-6 place-items-center'>
+        <div className='flex flex-col mt-8 place-items-center'>
           <img src={cog} className='w-[20px]'></img>
-          <img src={chat} className='w-[20px] mt-6'></img>
-          <img src={fullscreen} className='w-[16px] mt-6'></img>
+          <img src={chat} className='w-[20px] mt-8'></img>
+          <img src={fullscreen} className='w-[14px] mt-8'></img>
         </div>
 
-        <div className='flex flex-col pt-36 place-items-center mr-2'>
-          <img src={logout} className='w-[18px] mt-6'></img>
+        <div className='flex flex-col pt-96 place-items-center mr-2'>
+          <img src={logout} className='w-[18px] mt-14'></img>
         </div>
       </div>
 
@@ -90,13 +91,13 @@ function App() {
 
 
   {/* navbar */}
-      <div className='ml-36 mt-4 w-80 z-10 '>
+      <div className='ml-36 mt-4 w-96 z-10 '>
 
-        <h5 className='text-[16px] ml-1 flex flex-row'> <span className='text-[#A0A0A0] '>Project  </span>  <img src={arrow} className='ml-2'></img>  <span className='text-[#A0A0A0] ml-2'> Flows</span> <img src={arrow} className='ml-2'></img>     <span className='text-[#130F40] ml-2'> Sumary Finance {year.getFullYear()} </span>  </h5>
-        <span className='text-[32px] relative bottom-2 left-1'>Sumary Finance {year.getFullYear()}  </span>
+        <h5 className='text-[16px] ml-1 flex flex-row'> <span className='text-[#A0A0A0] '>Project  </span>  <img src={arrow} className='ml-2'></img>  <span className='text-[#A0A0A0] ml-2'> Flows</span> <img src={arrow} className='ml-2'></img>     <span className='text-[#130F40] ml-2 font-semibold'> Sumary Finance {year.getFullYear()} </span>  </h5>
+        <span className='text-[32px] relative bottom-2 left-1 font-bold '>Sumary Finance {year.getFullYear()}  </span>
       </div> 
 
-      <div className='flex  flex-row  relative  w-2/5 h-12 left-10 top-7'>
+      <div className='flex  flex-row  relative  w-2/5 h-12 left-72 top-7'>
         <button type='button'  className='border w-8 mt-2  h-8 bg-[#EEEFF3] rounded' ><img src={undo}  className='ml-2'></img > </button>
         <button type='button' className='border w-8 mt-2  h-8 bg-[#EEEFF3] ml-8 rounded'><img src={edit} className='ml-2'></img> </button>
         <img src={calendar} className=' w-6 mt-3  h-6 ml-8' ></img>
@@ -119,7 +120,7 @@ function App() {
    
     </div>
 
-    <div className=' flex flex-row border w-[1270px] ml-24 left-30 mt-[118px] bg-slate-200 h-[450px]'>
+    <div className=' fixed border w-full ml-[96px] left-30 mt-[118px] bg-[#f2f2f2] h-[500px]'>
        {/* <p className='mt-0'>dsadsadsadsadsadsadsadsadsadsadsadsadsa</p>  */}
        <ReactFlow
       nodes={nodes}
@@ -128,7 +129,7 @@ function App() {
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
     >
-      <Background />
+      <Background gap={50} size={2} />
     </ReactFlow>
         </div>
     </>
@@ -142,3 +143,4 @@ function App() {
 
 
 export default App;
+
