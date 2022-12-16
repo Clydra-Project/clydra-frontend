@@ -1,15 +1,22 @@
-import {  useCallback } from 'react';
-import './App.css';
+import { useState, useCallback , useRef  } from 'react';
 import ReactFlow, {
-  Node,
   addEdge,
-  Background,
+  FitViewOptions,
+  applyNodeChanges,
+  applyEdgeChanges,
+  Node,
   Edge,
+  NodeChange,
+  EdgeChange,
   Connection,
+  updateEdge,
   useNodesState,
-  useEdgesState
-} from "reactflow";
-
+  useEdgesState,
+  OnConnectStartParams,
+  DefaultEdgeOptions,
+  MarkerType
+} from 'reactflow';
+import './App.css';
 import 'reactflow/dist/style.css';
 import profile from'./assets/profile.png';
 import calendar from'./assets/calendar.svg';
@@ -28,32 +35,123 @@ import fullscreen from'./assets/fullscreen.svg';
 import logout from'./assets/logout.svg';
 import { basename } from 'path';
 
+import useStore from './store';
+import ColorChooserNode from './edit';
 
-function App() {
-  const initialNodes: Node[] = [
-    {
-      id: "1",
-      type: "input",
-      data: { label: "Node 1" },
-      position: { x: 250, y: 5 }
-    },
-    { id: "2", data: { label: "Node 2" }, position: { x: 100, y: 100 } },
-    { id: "3", data: { label: "Node 3" }, position: { x: 400, y: 100 } },
-    { id: "4", data: { label: "Node 4" }, position: { x: 400, y: 200 } }
-  ];
+const nodeTypes = {
+  custom: ColorChooserNode,
+};
+
+const defaultEdgeOptions : DefaultEdgeOptions = {
+  style: { strokeWidth: 2, stroke: '#9ca8b3' },
+  markerEnd: {
+    type: MarkerType.Arrow,
+  },
+};
+
+const initNodes = [
+  {
+    id: '1',
+    type: 'custom',
+    data: { name: 'Jane Doe', job: 'CEO', emoji: '😎' },
+    position: { x: -1400, y: 10 },
+  },
+  {
+    id: '2',
+    type: 'custom',
+    data: { name: 'Tyler Weary', job: 'Designer', emoji: '🤓' },
+
+    position: { x: -800, y: 200 },
+  },
+  {
+    id: '3',
+    type: 'custom',
+    data: { name: 'Jane Doe', job: 'CEO', emoji: '😎' },
+    position: { x: -1600, y: 220 },
+  },
+  {
+    id: '4',
+    type: 'custom',
+    data: { name: 'Tyler Weary', job: 'Designer', emoji: '🤓' },
+    position: { x: -300, y: -100 },
+  },
+  // {
+  //   id: '5',
+  //   type: 'custom',
+  //   data: { name: 'Tyler Weary', job: 'Designer', emoji: '🤓' },
+
+  //   position: { x: -200, y: 200 },
+  // },
+  // {
+  //   id: '6',
+  //   type: 'custom',
+  //   data: { name: 'Tyler Weary', job: 'Designer', emoji: '🤓' },
+  //   position: { x: -200, y: 200 },
+  // },
   
-  const initialEdges: Edge[] = [
-    { id: "e1-2", source: "1", target: "2", animated: true },
-    { id: "e1-3", source: "1", target: "3" }
-  ];
 
-  const [nodes, , onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const onConnect = useCallback(
-    (params: Edge | Connection) => setEdges((els) => addEdge(params, els)),
-    [setEdges]
+];
+
+const initEdges = [
+  {
+    id: '1',
+    source: '1',
+    target: '2',
+    animated: true,
+ 
+  },
+  {
+    id: '2',
+    source: '2',
+    target: '3',
+ 
+  },
+  {
+    id: '4',
+    source: '4',
+    target: '5',
+  
+  },
+
+];
+
+const fitViewOptions: FitViewOptions = {
+  padding: 0.4,
+};
+
+
+
+function Flow() {
+  // const [nodes, setNodes, onNodesChange] = useState<Node[]>(initNodes);
+  // const [edges, setEdges, onEdgesChange] = useState<Edge[]>(initEdges);
+
+  // const onNodesChange = useCallback(
+  //   (changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)),
+  //   [setNodes]
+  // );
+  // const onEdgesChange = useCallback(
+  //   (changes: EdgeChange[]) => setEdges((eds) => applyEdgeChanges(changes, eds)),
+  //   [setEdges]
+  // );
+  const [nodes, setNodes, onNodesChange] = useNodesState(initNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initEdges);
+  const onEdgeUpdate = useCallback(
+    (oldEdge : Edge, connection: Connection) => setEdges((eds) => updateEdge(oldEdge, connection, eds)),
+    []
   );
+  const onConnect = useCallback(
+    (connection: Connection) => setEdges((eds) => addEdge(connection, eds)),
+    []
+  );
+
+  // const onConnect = useCallback(
+  //   (connection: Connection) => setEdges((eds) => addEdge(connection, eds)),
+  //   [setEdges]
+  // );
+
+  
   const year = new Date();
+
   return (
   <>
     <div className="flex  justify-between fixed bg-white w-full h-[120px] top-0 left-0">
@@ -121,16 +219,19 @@ function App() {
     </div>
 
     <div className=' fixed border w-full ml-[96px] left-30 mt-[118px] bg-[#f2f2f2] h-[500px]'>
-       {/* <p className='mt-0'>dsadsadsadsadsadsadsadsadsadsadsadsadsa</p>  */}
-       <ReactFlow
+    <ReactFlow
       nodes={nodes}
       edges={edges}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
+      onEdgeUpdate={onEdgeUpdate}
       onConnect={onConnect}
-    >
-      <Background gap={50} size={2} />
-    </ReactFlow>
+      fitView
+      fitViewOptions={fitViewOptions}
+      nodeTypes={nodeTypes}
+      snapToGrid
+      defaultEdgeOptions={defaultEdgeOptions}
+    />
         </div>
     </>
 
@@ -142,5 +243,5 @@ function App() {
 
 
 
-export default App;
+export default Flow;
 
